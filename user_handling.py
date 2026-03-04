@@ -1,7 +1,6 @@
 # User handling
 import json
 import os
-
 # Ranks
 ranks = {
     "new user": "New User",
@@ -55,4 +54,5 @@ def get_user_information(user_obj):
         "rank": user_obj.rank.value,
         "rank_display": ranks.get(user_obj.rank.value, user_obj.rank.value),
         "bookings_count": len(user_obj.bookings)
+
     }
