@@ -49,6 +49,7 @@ def user_to_dict(user: User) -> Dict:
         "username": user.username,
         "password": user.password,
         "rank": user.rank.value,
+        "bookings": user.bookings
     }
 def dict_to_user(data: Dict) -> User:
     return User(
