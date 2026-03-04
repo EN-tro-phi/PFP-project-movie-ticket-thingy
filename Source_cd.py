@@ -6,6 +6,7 @@
 import customtkinter as ctk
 import tkinter as tk
 from tkinter import messagebox
+from user_handling import register, login
 
 import datetime
 import json
@@ -80,7 +81,18 @@ def user_login(username: str, password: str) -> User:
     for user in users:
         if user.username == username and user.password == password:
             return user
-    return None        
+    return None
+
+def handle_register(username, password):
+    users = load_users()
+    success, result = register(username, password, users, User, Rank)
+
+    if success:
+        users.append(result)
+        save_users(users)
+        messagebox.showinfo("Success", "Account created successfully!")
+    else:
+        messagebox.showerror("Error", result)
 
 #This part is for ADMIN and EMPLOYEE ONLY 
 def load_movies() -> List[Dict]:
