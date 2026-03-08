@@ -16,3 +16,17 @@ def find_movie(title):
             return m
 
     return None
+
+
+def show_movies():
+    for m in movies:
+        print(m["title"], m["seats"])
+
+
+def book_ticket(title, n):
+    m = find_movie(title)
+    if m and m["seats"] >= n:
+        m["seats"] -= n
+        print("Booked")
+    else:
+        print("Cannot book")
