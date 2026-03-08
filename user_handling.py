@@ -1,5 +1,5 @@
 # user_handling.py
-from models.py import User, RankEnum
+from models import User, RankEnum
 
 # REGISTER USER
 def register(username, password, users_list, user_class, rank_enum):
@@ -21,7 +21,7 @@ def login(username, password, users_list):
     if username == "" or password == "":
         return False, None
     for user in users_list:
-    if user.username == username and user.password == password:
+        if user.username == username and user.password == password:
         return True, user
     return False, None
 
@@ -34,3 +34,4 @@ def get_user_information(user):
         "rank": user.rank.name,
         "bookings_count": len(user.bookings)
     }
+
