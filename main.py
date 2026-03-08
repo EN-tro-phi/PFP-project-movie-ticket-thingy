@@ -1,3 +1,4 @@
-from UITkinter import start
+from UITkinter import start_ui
 
-start()
+if __name__ == "__main__":
+    start_ui()
