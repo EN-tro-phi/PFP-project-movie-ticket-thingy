@@ -1,30 +1,10 @@
 import json
 import os
+from models import User, RankEnum
 
-def load_users(file_path, user_class, rank_enum):
+USERS_FILE = "users.json"
 
-    if not os.path.exists(file_path):
-        return []
-
-    with open(file_path, "r") as f:
-        data = json.load(f)
-
-    users = []
-
-    for u in data:
-        users.append(
-            user_class(
-                username=u["username"],
-                password=u["password"],
-                rank=rank_enum[u["rank"]],
-                bookings=u.get("bookings", [])
-            )
-        )
-
-    return users
-
-
-def save_users(file_path, users_list):
+def save_users(users_list):
 
     data = []
 
@@ -32,9 +12,39 @@ def save_users(file_path, users_list):
         data.append({
             "username": user.username,
             "password": user.password,
-            "rank": user.rank.name,
+            "rank": user.rank.value,
             "bookings": user.bookings
         })
 
-    with open(file_path, "w") as f:
+    with open(USERS_FILE, "w") as f:
         json.dump(data, f, indent=4)
+
+
+def load_users():
+
+    if not os.path.exists(USERS_FILE):
+        return []
+
+    with open(USERS_FILE, "r") as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            return []
+
+    users_list = []
+
+    for u in data:
+        user = User(
+            username=u["username"],
+            password=u["password"],
+            rank=RankEnum(u["rank"]),
+            bookings=u.get("bookings", [])
+        )
+
+        users_list.append(user)
+
+    return users_list
+
+
+def save_user_bookings(users_list):
+    save_users(users_list)
