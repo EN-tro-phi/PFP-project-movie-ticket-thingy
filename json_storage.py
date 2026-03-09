@@ -2,7 +2,8 @@ import json
 import os
 from models import User, RankEnum
 
-USERS_FILE = "users.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+USERS_FILE = os.path.join(BASE_DIR, "users.json")
 
 def save_users(users_list):
 
@@ -15,6 +16,17 @@ def save_users(users_list):
             "rank": user.rank.value,
             "bookings": user.bookings
         })
+
+    # if file already exists and contents are identical, don't rewrite
+    if os.path.exists(USERS_FILE):
+        try:
+            with open(USERS_FILE, "r") as f:
+                existing = json.load(f)
+            if existing == data:
+                return
+        except json.JSONDecodeError:
+            # corrupted file, we'll overwrite below
+            pass
 
     with open(USERS_FILE, "w") as f:
         json.dump(data, f, indent=4)
@@ -50,7 +62,14 @@ def save_user_bookings(users_list):
     save_users(users_list)
 
 
-MOVIES_FILE = "movies.json"
+def add_user(user):
+    """Add a single new user to the JSON file without rewriting everything"""
+    users_list = load_users()
+    users_list.append(user)
+    save_users(users_list)
+
+
+MOVIES_FILE = os.path.join(BASE_DIR, "movies.json")
 
 def save_movies(movies_list):
 

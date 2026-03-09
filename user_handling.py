@@ -1,7 +1,5 @@
-# user_handling.py
 from models import User, RankEnum
 
-# REGISTER USER
 def register(username, password, users_list, user_class, rank_enum):
     if username == "" or password == "":
         return False, "Please enter username and password."
@@ -16,7 +14,6 @@ def register(username, password, users_list, user_class, rank_enum):
     )
     return True, new_user
 
-# LOGIN USER
 def login(username, password, users_list):
     if username == "" or password == "":
         return False, None
@@ -25,7 +22,6 @@ def login(username, password, users_list):
             return True, user
     return False, None
 
-# GET USER INFORMATION
 def get_user_information(user):
     if user is None:
         return None

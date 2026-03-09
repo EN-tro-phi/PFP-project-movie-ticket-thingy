@@ -1,21 +1,20 @@
 [
     {
-        "username": "Admin_01",
-        "password": "01_Admin__0a1",
-        "rank": "admin",
+        "username": "test",
+        "password": "p",
+        "rank": "new user",
         "bookings": []
     },
     {
-        "username": "1234",
-        "password": "1234",
+        "username": "test2",
+        "password": "p2",
         "rank": "new user",
-        "bookings": [
-            {
-                "movie": "dune",
-                "seats": 2,
-                "premiere_date": "",
-                "booking_date": "2026-03-09 10:54:42"
-            }
-        ]
+        "bookings": []
+    },
+    {
+        "username": "new ",
+        "password": "new",
+        "rank": "new user",
+        "bookings": []
     }
 ]

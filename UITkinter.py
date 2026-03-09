@@ -28,18 +28,21 @@ def register():
     username = entry_username.get()
     password = entry_password.get()
 
-    # if this is the first user ever, make them admin automatically
     chosen_rank = RankEnum.admin if len(users_list) == 0 else RankEnum.new_user
 
     success, result = register_user(username, password, users_list, User, chosen_rank)
 
     if success:
-        save_users(users_list)
+        # newly created user object is in 'result'
+        # add just that user to storage; this avoids rewriting the file multiple times and
+        # ensures the JSON is created only once during the life of the program.
+        from json_storage import add_user
+        add_user(result)
+        users_list.append(result)  # keep the in-memory list in sync
         messagebox.showinfo("Success", "User registered")
         if chosen_rank == RankEnum.admin:
             messagebox.showinfo("Notice", "First user created; assigned admin rank.")
     else:
-        # result contains error message
         messagebox.showerror("Error", result)
 
 def login():
@@ -53,10 +56,8 @@ def login():
     if success:
         current_user = user
         messagebox.showinfo("Success", "Login successful")
-        # update status label
         if label_status:
             label_status.config(text=f"Logged in as {current_user.username}")
-        # disable login/register inputs
         if register_button:
             register_button.config(state=tk.DISABLED)
         if login_button:
@@ -106,18 +107,15 @@ def show_movies():
         messagebox.showinfo("Movies", "No movies available")
         return
 
-    # Create a new popup window
     movie_window = tk.Toplevel()
     movie_window.title("Available Movies")
     movie_window.geometry("400x300")
 
     tk.Label(movie_window, text="Available Movies", font=("Arial", 12, "bold")).pack(pady=5)
 
-    # Create a text widget to display movies
     text_widget = tk.Text(movie_window, height=12, width=50)
     text_widget.pack(pady=5, padx=5)
 
-    # Insert movie list
     for m in movies:
         movie_info = f"Title: {m['title']}\n"
         movie_info += f"Available Seats: {m['seats']}\n"
@@ -125,7 +123,6 @@ def show_movies():
         movie_info += "-" * 40 + "\n"
         text_widget.insert(tk.END, movie_info)
 
-    # Make text widget read-only
     text_widget.config(state=tk.DISABLED)
 
     tk.Button(movie_window, text="Close", command=movie_window.destroy).pack(pady=5)
@@ -137,36 +134,29 @@ def show_seat_selection():
         messagebox.showerror("Error", "Please login first")
         return
 
-    # Get movie name
     movie = entry_movie.get()
     if movie == "":
         messagebox.showerror("Error", "Please enter a movie name")
         return
 
-    # Get available movie
     from movie_handling import find_movie
     movie_data = find_movie(movie)
     if not movie_data:
         messagebox.showerror("Error", "Movie not found")
         return
 
-    # Create seat selection window
     seat_window = tk.Toplevel()
     seat_window.title(f"Seat Selection - {movie}")
     seat_window.geometry("600x500")
 
-    # Title
     tk.Label(seat_window, text=f"Select Seats for {movie}", font=("Arial", 14, "bold")).pack(pady=10)
 
-    # Canvas for screen and seats
     canvas = tk.Canvas(seat_window, bg="lightgray", width=550, height=350)
     canvas.pack(pady=10, padx=10)
 
-    # Draw screen
     canvas.create_rectangle(50, 20, 500, 60, fill="black", outline="black")
     canvas.create_text(275, 40, text="SCREEN", fill="white", font=("Arial", 12, "bold"))
 
-    # Seat configuration
     row_count = 5
     col_count = 8
     seat_width = 40
@@ -200,7 +190,6 @@ def show_seat_selection():
         else:
             label_seats.config(text="Selected Seats: None")
 
-    # Draw seats
     for row in range(row_count):
         for col in range(col_count):
             x = start_x + col * seat_spacing_x
@@ -215,11 +204,9 @@ def show_seat_selection():
             seat_rects[seat_id] = (rect, seat_status)
             canvas.tag_bind(rect, "<Button-1>", lambda e, r=row, c=col: toggle_seat(r, c))
 
-    # Selected seats label
     label_seats = tk.Label(seat_window, text="Selected Seats: None", font=("Arial", 10))
     label_seats.pack(pady=5)
 
-    # Confirmation frame
     confirm_frame = tk.Frame(seat_window)
     confirm_frame.pack(pady=10)
 
@@ -231,15 +218,12 @@ def show_seat_selection():
 
         num_seats = len(selected_seats)
         
-        # Create receipt confirmation window
         receipt_window = tk.Toplevel(seat_window)
         receipt_window.title("Booking Receipt")
         receipt_window.geometry("500x450")
         
-        # Title
-        tk.Label(receipt_window, text="📋 BOOKING RECEIPT", font=("Arial", 16, "bold"), fg="green").pack(pady=15)
+        tk.Label(receipt_window, text=" BOOKING RECEIPT", font=("Arial", 16, "bold"), fg="green").pack(pady=15)
         
-        # Receipt content in text widget
         receipt_text = tk.Text(receipt_window, height=18, width=60, font=("Courier", 10))
         receipt_text.pack(pady=10, padx=10)
         
@@ -271,7 +255,6 @@ def show_seat_selection():
         receipt_text.insert(tk.END, receipt_content)
         receipt_text.config(state=tk.DISABLED)
         
-        # Button frame
         button_frame = tk.Frame(receipt_window)
         button_frame.pack(pady=15)
         
@@ -302,7 +285,6 @@ def show_user_bookings():
         messagebox.showerror("Error", "Please login first")
         return
 
-    # Create booking history window
     booking_window = tk.Toplevel()
     booking_window.title(f"My Bookings - {current_user.username}")
     booking_window.geometry("600x450")
@@ -312,7 +294,6 @@ def show_user_bookings():
     if not current_user.bookings:
         tk.Label(booking_window, text="No bookings yet", font=("Arial", 10)).pack(pady=20)
     else:
-        # Create text widget to display bookings
         text_widget = tk.Text(booking_window, height=18, width=75)
         text_widget.pack(pady=5, padx=5)
 
@@ -333,7 +314,7 @@ def show_user_bookings():
     tk.Button(booking_window, text="Close", command=booking_window.destroy).pack(pady=10)
 
 
-# ---------- admin actions ----------
+#admin panel
 def admin_add():
     title = entry_admin_title.get()
     seats = entry_admin_seats.get()
@@ -397,7 +378,6 @@ def refresh_movie_list():
         text_movie_list.insert(tk.END, f"{m['title']} ({m['seats']} seats) - {m.get('showtime','')} - {m.get('premiere_date','')}\n")
 
 def start_ui():
-    # declare globals used in this function so assignments affect module scope
     global entry_username, entry_password, entry_movie, entry_seats
     global register_button, login_button, label_status, admin_frame
 
@@ -405,7 +385,6 @@ def start_ui():
     root.title("Movie Ticket System")
     root.geometry("300x300")
 
-    # status label
     label_status = tk.Label(root, text="Not logged in")
     label_status.pack(pady=2)
 
@@ -434,7 +413,7 @@ def start_ui():
     tk.Button(root, text="View Movies", command=show_movies).pack(pady=5)
     tk.Button(root, text="My Bookings", command=show_user_bookings).pack(pady=5)
 
-    # --- admin panel (hidden until admin login) ---
+#admin panel (hidden by default, only show for admins after login)
     global admin_frame, entry_admin_title, entry_admin_seats, entry_admin_showtime, entry_admin_premiere_date, text_movie_list
     admin_frame = tk.Frame(root)
     tk.Label(admin_frame, text="Admin Panel", font=("Arial", 12, "bold")).pack(pady=5)
@@ -460,7 +439,5 @@ def start_ui():
     tk.Button(admin_frame, text="List Movies", command=refresh_movie_list).pack(pady=2)
     text_movie_list = tk.Text(admin_frame, height=8, width=30)
     text_movie_list.pack(pady=5)
-
-    # don't pack admin_frame yet
-
+    
     root.mainloop()
