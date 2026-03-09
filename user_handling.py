@@ -4,10 +4,10 @@ from models import User, RankEnum
 # REGISTER USER
 def register(username, password, users_list, user_class, rank_enum):
     if username == "" or password == "":
-        return False, "Please enter username and password"
+        return False, "Please enter username and password."
     for user in users_list:
         if user.username == username:
-            return False, "Username already exists"
+            return False, "Username already exists."
     new_user = user_class(
         username=username,
         password=password,
@@ -34,4 +34,3 @@ def get_user_information(user):
         "rank": user.rank.name,
         "bookings_count": len(user.bookings)
     }
-
