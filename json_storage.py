@@ -48,3 +48,46 @@ def load_users():
 
 def save_user_bookings(users_list):
     save_users(users_list)
+
+
+MOVIES_FILE = "movies.json"
+
+def save_movies(movies_list):
+
+    data = []
+
+    for m in movies_list:
+        data.append({
+            "title": m.get("title"),
+            "seats": m.get("seats"),
+            "showtime": m.get("showtime", ""),
+            "premiere_date": m.get("premiere_date", "")
+        })
+
+    with open(MOVIES_FILE, "w") as f:
+        json.dump(data, f, indent=4)
+
+
+def load_movies():
+
+    if not os.path.exists(MOVIES_FILE):
+        return []
+
+    with open(MOVIES_FILE, "r") as f:
+        try:
+            data = json.load(f)
+        except json.JSONDecodeError:
+            return []
+
+    movies_list = []
+
+    for m in data:
+        movie = {
+            "title": m.get("title"),
+            "seats": m.get("seats"),
+            "showtime": m.get("showtime", ""),
+            "premiere_date": m.get("premiere_date", "")
+        }
+        movies_list.append(movie)
+
+    return movies_list

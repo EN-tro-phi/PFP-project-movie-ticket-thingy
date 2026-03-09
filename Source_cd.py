@@ -5,7 +5,14 @@
 
 from user_handling import register, login
 from booking_handling import create_booking
-from movie_handling import find_movie
+import movie_handling
+
+# bring names into local namespace for convenience
+find_movie = movie_handling.find_movie
+add_movie = movie_handling.add_movie
+remove_movie = movie_handling.remove_movie
+update_movie = movie_handling.update_movie
+list_movies = movie_handling.list_movies
 
 def register_user(username, password, users_list, user_class, rank_enum):
 
@@ -23,17 +30,26 @@ def login_user(username, password, users_list):
 
 
 def book_ticket(user, movie_title, seats):
+    # call the movie_handling implementation explicitly to avoid recursion
+    success, msg = movie_handling.book_ticket(movie_title, seats)
+    if success:
+        movie = find_movie(movie_title)
+        premiere_date = movie.get("premiere_date", "") if movie else ""
+        create_booking(user, movie_title, seats, premiere_date)
+    return success, msg
 
-    movie = find_movie(movie_title)
 
-    if not movie:
-        return False, "Movie not found"
+def admin_add_movie(title, seats, showtime="", premiere_date=""):
+    return add_movie(title, seats, showtime, premiere_date)
 
-    if movie["seats"] < seats:
-        return False, "Not enough seats"
 
-    movie["seats"] -= seats
+def admin_remove_movie(title):
+    return remove_movie(title)
 
-    create_booking(user, movie_title, seats)
 
-    return True, "Booking successful"
+def admin_update_movie(title, seats=None, showtime=None, premiere_date=None):
+    return update_movie(title, seats, showtime, premiere_date)
+
+
+def admin_list_movies():
+    return list_movies()

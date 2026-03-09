@@ -22,7 +22,7 @@ def login(username, password, users_list):
         return False, None
     for user in users_list:
         if user.username == username and user.password == password:
-        return True, user
+            return True, user
     return False, None
 
 # GET USER INFORMATION

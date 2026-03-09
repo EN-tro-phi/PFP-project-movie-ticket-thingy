@@ -13,4 +13,20 @@
 
 # Note to all
 # You should use a extension called "Auto PEP-8", "Pylance", "Python", "Python enviroments", "Python debug" and "Python indent". 
-# If its already downloaded onto your extensions then you dont need to download it anymore. 
+# If its already downloaded onto your extensions then you dont need to download it anymore.
+
+## Admin account & movie management
+
+An **admin user** can manage the movie catalog from the GUI once logged in. The admin panel allows you to:
+
+- **Add a movie** (title, seats and showtime)
+- **Update a movie** (change seats and/or showtime)
+- **Remove a movie** by title
+- **List current movies** with seats and showtimes
+
+To use the admin panel, log in with a user whose `rank` is set to `admin`. The application does not create such a user automatically; you can either:
+
+1. Register a normal user and then edit `users.json` manually, changing the `rank` value to `"admin"`.
+2. (Optionally) modify the code to promote a user programmatically.
+
+Movie data is stored in `movies.json` and persists between runs. 

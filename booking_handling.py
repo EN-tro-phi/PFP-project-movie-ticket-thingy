@@ -1,8 +1,12 @@
-def create_booking(user, movie_name, seats):
+from datetime import datetime
+
+def create_booking(user, movie_name, seats, premiere_date=""):
 
     booking = {
         "movie": movie_name,
-        "seats": seats
+        "seats": seats,
+        "premiere_date": premiere_date,
+        "booking_date": datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     }
 
     user.bookings.append(booking)
