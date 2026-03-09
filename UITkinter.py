@@ -33,7 +33,12 @@ def register():
     success, result = register_user(username, password, users_list, User, chosen_rank)
 
     if success:
-        save_users(users_list)
+        # newly created user object is in 'result'
+        # add just that user to storage; this avoids rewriting the file multiple times and
+        # ensures the JSON is created only once during the life of the program.
+        from json_storage import add_user
+        add_user(result)
+        users_list.append(result)  # keep the in-memory list in sync
         messagebox.showinfo("Success", "User registered")
         if chosen_rank == RankEnum.admin:
             messagebox.showinfo("Notice", "First user created; assigned admin rank.")
