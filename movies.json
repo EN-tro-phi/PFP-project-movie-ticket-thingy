@@ -1,0 +1,26 @@
+[
+    {
+        "title": "Dune",
+        "seats": 98,
+        "showtime": "8pm",
+        "premiere_date": ""
+    },
+    {
+        "title": "Avatar",
+        "seats": 120,
+        "showtime": "9pm",
+        "premiere_date": ""
+    },
+    {
+        "title": "Interstellar",
+        "seats": 80,
+        "showtime": "7pm",
+        "premiere_date": ""
+    },
+    {
+        "title": "New world",
+        "seats": 120,
+        "showtime": "6pm",
+        "premiere_date": ""
+    }
+]
