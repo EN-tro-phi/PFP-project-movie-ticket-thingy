@@ -30,4 +30,3 @@ def get_user_information(user):
         "rank": user.rank.name,
         "bookings_count": len(user.bookings)
     }
-
