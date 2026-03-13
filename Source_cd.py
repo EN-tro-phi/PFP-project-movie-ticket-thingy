@@ -7,7 +7,6 @@ from user_handling import register, login
 from booking_handling import create_booking
 import movie_handling
 
-# bring names into local namespace for convenience
 find_movie = movie_handling.find_movie
 add_movie = movie_handling.add_movie
 remove_movie = movie_handling.remove_movie
@@ -30,7 +29,6 @@ def login_user(username, password, users_list):
 
 
 def book_ticket(user, movie_title, seats):
-    # call the movie_handling implementation explicitly to avoid recursion
     success, msg = movie_handling.book_ticket(movie_title, seats)
     if success:
         movie = find_movie(movie_title)

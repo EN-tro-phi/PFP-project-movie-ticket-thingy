@@ -1,9 +1,16 @@
 [
     {
-        "username": "test",
-        "password": "p",
-        "rank": "new user",
-        "bookings": []
+        "username": "admin",
+        "password": "admin_01",
+        "rank": "admin",
+        "bookings": [
+            {
+                "movie": "Pocu no pico",
+                "seats": 27,
+                "premiere_date": "2026/08/12",
+                "booking_date": "2026-03-10 11:26:08"
+            }
+        ]
     },
     {
         "username": "test2",
@@ -16,5 +23,31 @@
         "password": "new",
         "rank": "new user",
         "bookings": []
+    },
+    {
+        "username": "12234",
+        "password": "1234",
+        "rank": "new user",
+        "bookings": [
+            {
+                "movie": "Interstellar",
+                "seats": 6,
+                "premiere_date": "",
+                "booking_date": "2026-03-10 11:22:38"
+            }
+        ]
+    },
+    {
+        "username": "12234",
+        "password": "1234",
+        "rank": "new user",
+        "bookings": [
+            {
+                "movie": "Interstellar",
+                "seats": 6,
+                "premiere_date": "",
+                "booking_date": "2026-03-10 11:22:38"
+            }
+        ]
     }
 ]

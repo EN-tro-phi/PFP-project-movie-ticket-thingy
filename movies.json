@@ -13,7 +13,7 @@
     },
     {
         "title": "Interstellar",
-        "seats": 80,
+        "seats": 74,
         "showtime": "7pm",
         "premiere_date": ""
     },
@@ -22,5 +22,11 @@
         "seats": 120,
         "showtime": "6pm",
         "premiere_date": ""
+    },
+    {
+        "title": "SOnic the hedgehog 3000",
+        "seats": 100,
+        "showtime": "9:00pm",
+        "premiere_date": "2026/08/12"
     }
 ]
