@@ -80,7 +80,9 @@ def save_movies(movies_list):
             "title": m.get("title"),
             "seats": m.get("seats"),
             "showtime": m.get("showtime", ""),
-            "premiere_date": m.get("premiere_date", "")
+            "premiere_date": m.get("premiere_date", ""),
+            # persist per-seat bookings if present
+            "booked_seats": m.get("booked_seats", [])
         })
 
     with open(MOVIES_FILE, "w") as f:
@@ -105,7 +107,9 @@ def load_movies():
             "title": m.get("title"),
             "seats": m.get("seats"),
             "showtime": m.get("showtime", ""),
-            "premiere_date": m.get("premiere_date", "")
+            "premiere_date": m.get("premiere_date", ""),
+            # load any stored per-seat bookings; default to empty list
+            "booked_seats": m.get("booked_seats", [])
         }
         movies_list.append(movie)
 

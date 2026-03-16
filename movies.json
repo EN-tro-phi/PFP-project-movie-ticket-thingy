@@ -1,32 +1,81 @@
 [
     {
         "title": "Dune",
-        "seats": 96,
+        "seats": 56,
         "showtime": "8pm",
-        "premiere_date": ""
+        "premiere_date": "",
+        "booked_seats": [
+            "2-5",
+            "2-4",
+            "2-7",
+            "2-6",
+            "0-0",
+            "0-1",
+            "0-2",
+            "0-3",
+            "1-2",
+            "1-3",
+            "1-1",
+            "1-0",
+            "3-0",
+            "4-0",
+            "4-1",
+            "3-1",
+            "3-2",
+            "4-2",
+            "3-3",
+            "4-3",
+            "3-4",
+            "3-5",
+            "4-5",
+            "4-4",
+            "4-6",
+            "3-6",
+            "3-7",
+            "4-7",
+            "2-0",
+            "2-1",
+            "2-3",
+            "2-2",
+            "1-4",
+            "1-5",
+            "0-5",
+            "0-4",
+            "1-6",
+            "0-6",
+            "0-7",
+            "1-7"
+        ]
     },
     {
         "title": "Avatar",
         "seats": 120,
         "showtime": "9pm",
-        "premiere_date": ""
+        "premiere_date": "",
+        "booked_seats": []
     },
     {
         "title": "Interstellar",
         "seats": 74,
         "showtime": "7pm",
-        "premiere_date": ""
+        "premiere_date": "",
+        "booked_seats": []
     },
     {
         "title": "New world",
-        "seats": 120,
+        "seats": 118,
         "showtime": "6pm",
-        "premiere_date": ""
+        "premiere_date": "",
+        "booked_seats": [
+            "0-2",
+            "0-3"
+        ]
     },
     {
         "title": "SOnic the hedgehog 3000",
         "seats": 100,
         "showtime": "9:00pm",
-        "premiere_date": "2026/08/12"
+        "premiere_date": "2026/08/12",
+        "booked_seats": []
     }
 ]

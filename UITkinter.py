@@ -166,22 +166,27 @@ def show_seat_selection():
     seat_spacing_x = 50
     seat_spacing_y = 40
 
+    # seats currently selected in this UI session
     selected_seats = []
+    # map seat_id -> (rect_id, status_dict)
     seat_rects = {}
 
+    # load already-booked seats for this movie from persisted data
+    booked_seats_persisted = movie_data.get("booked_seats", [])
+
     def toggle_seat(row, col):
-        """Toggle seat selection."""
+        """Mark a seat as booked (red) if it is available (blue)."""
         seat_id = f"{row}-{col}"
         rect, seat_status = seat_rects[seat_id]
-        if not seat_status["booked"]:
-            seat_status["selected"] = not seat_status["selected"]
-            color = "green" if seat_status["selected"] else "lightblue"
-            canvas.itemconfig(rect, fill=color)
-            if seat_status["selected"]:
-                selected_seats.append(seat_id)
-            else:
-                selected_seats.remove(seat_id)
-            update_seats_label()
+        # Only allow booking if the seat is currently available in this session
+        if seat_status["booked"]:
+            return
+
+        seat_status["booked"] = True
+        seat_status["selected"] = True
+        canvas.itemconfig(rect, fill="red")
+        selected_seats.append(seat_id)
+        update_seats_label()
 
     def update_seats_label():
         """Update selected seats label."""
@@ -196,10 +201,16 @@ def show_seat_selection():
             y = start_y + row * seat_spacing_y
             seat_id = f"{row}-{col}"
 
-            seat_status = {"selected": False, "booked": False}
+            # determine initial visual state: booked (red) or available (blue)
+            initially_booked = seat_id in booked_seats_persisted
+            seat_status = {
+                "selected": False,
+                "booked": initially_booked,
+            }
+            fill_color = "red" if initially_booked else "blue"
             rect = canvas.create_rectangle(
                 x, y, x + seat_width, y + seat_height,
-                fill="lightblue", outline="black"
+                fill=fill_color, outline="black"
             )
             seat_rects[seat_id] = (rect, seat_status)
             canvas.tag_bind(rect, "<Button-1>", lambda e, r=row, c=col: toggle_seat(r, c))
@@ -260,7 +271,8 @@ def show_seat_selection():
         
         def finalize_booking():
             """Finalize the booking after confirming receipt."""
-            success, msg = book_ticket_func(current_user, movie, num_seats)
+            # persist specific seat IDs so they remain booked across sessions
+            success, msg = book_ticket_func(current_user, movie, selected_seats.copy())
             if success:
                 save_users(users_list)
                 messagebox.showinfo("Success", "✓ Booking confirmed and saved!")

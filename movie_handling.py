@@ -54,12 +54,26 @@ def update_movie(title, seats=None, showtime=None, premiere_date=None):
     return True, "Movie updated"
 
 
-def book_ticket(title, n):
+def book_ticket(title, seat_ids):
     m = find_movie(title)
     if not m:
         return False, "Movie not found"
-    if m["seats"] < n:
+
+    # ensure we have a list of already-booked seats stored with this movie
+    if "booked_seats" not in m or not isinstance(m["booked_seats"], list):
+        m["booked_seats"] = []
+
+    # prevent double-booking the same seat
+    for seat_id in seat_ids:
+        if seat_id in m["booked_seats"]:
+            return False, f"Seat {seat_id} is already booked"
+
+    # check against remaining seat count for safety
+    if m["seats"] < len(seat_ids):
         return False, "Not enough seats"
-    m["seats"] -= n
+
+    # mark seats as booked and reduce available count
+    m["booked_seats"].extend(seat_ids)
+    m["seats"] -= len(seat_ids)
     save_movies(movies)
     return True, "Booked"
