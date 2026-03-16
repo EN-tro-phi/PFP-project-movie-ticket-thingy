@@ -4,6 +4,8 @@ from models import User, RankEnum
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 USERS_FILE = os.path.join(BASE_DIR, "users.json")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+USERS_FILE = os.path.join(BASE_DIR, "users.json")
 
 def save_users(users_list):
 
@@ -16,6 +18,17 @@ def save_users(users_list):
             "rank": user.rank.value,
             "bookings": user.bookings
         })
+
+    # if file already exists and contents are identical, don't rewrite
+    if os.path.exists(USERS_FILE):
+        try:
+            with open(USERS_FILE, "r") as f:
+                existing = json.load(f)
+            if existing == data:
+                return
+        except json.JSONDecodeError:
+            # corrupted file, we'll overwrite below
+            pass
 
     # if file already exists and contents are identical, don't rewrite
     if os.path.exists(USERS_FILE):

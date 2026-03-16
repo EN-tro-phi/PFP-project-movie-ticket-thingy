@@ -12,6 +12,13 @@ add_movie = movie_handling.add_movie
 remove_movie = movie_handling.remove_movie
 update_movie = movie_handling.update_movie
 list_movies = movie_handling.list_movies
+import movie_handling
+
+find_movie = movie_handling.find_movie
+add_movie = movie_handling.add_movie
+remove_movie = movie_handling.remove_movie
+update_movie = movie_handling.update_movie
+list_movies = movie_handling.list_movies
 
 def register_user(username, password, users_list, user_class, rank_enum):
 

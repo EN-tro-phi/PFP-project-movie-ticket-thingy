@@ -21,6 +21,26 @@ register_button = None
 login_button = None
 label_status = None
 
+from Source_cd import register_user, login_user, book_ticket as book_ticket_func, \
+    admin_add_movie, admin_remove_movie, admin_update_movie, admin_list_movies
+from json_storage import load_users, save_users
+from models import User, RankEnum
+
+users_list = load_users()
+
+admin_frame = None
+entry_admin_title = None
+entry_admin_seats = None
+entry_admin_showtime = None
+entry_admin_premiere_date = None
+text_movie_list = None
+
+entry_username = None
+entry_password = None
+register_button = None
+login_button = None
+label_status = None
+
 
 current_user = None
 
@@ -28,6 +48,9 @@ def register():
     username = entry_username.get()
     password = entry_password.get()
 
+    chosen_rank = RankEnum.admin if len(users_list) == 0 else RankEnum.new_user
+
+    success, result = register_user(username, password, users_list, User, chosen_rank)
     chosen_rank = RankEnum.admin if len(users_list) == 0 else RankEnum.new_user
 
     success, result = register_user(username, password, users_list, User, chosen_rank)
@@ -39,10 +62,19 @@ def register():
         from json_storage import add_user
         add_user(result)
         users_list.append(result)  # keep the in-memory list in sync
+        # newly created user object is in 'result'
+        # add just that user to storage; this avoids rewriting the file multiple times and
+        # ensures the JSON is created only once during the life of the program.
+        from json_storage import add_user
+        add_user(result)
+        users_list.append(result)  # keep the in-memory list in sync
         messagebox.showinfo("Success", "User registered")
         if chosen_rank == RankEnum.admin:
             messagebox.showinfo("Notice", "First user created; assigned admin rank.")
+        if chosen_rank == RankEnum.admin:
+            messagebox.showinfo("Notice", "First user created; assigned admin rank.")
     else:
+        messagebox.showerror("Error", result)
         messagebox.showerror("Error", result)
 
 def login():
@@ -52,10 +84,29 @@ def login():
     password = entry_password.get()
 
     success, user = login_user(username, password, users_list)
+    success, user = login_user(username, password, users_list)
 
     if success:
         current_user = user
+        current_user = user
         messagebox.showinfo("Success", "Login successful")
+        if label_status:
+            label_status.config(text=f"Logged in as {current_user.username}")
+        if register_button:
+            register_button.config(state=tk.DISABLED)
+        if login_button:
+            login_button.config(state=tk.DISABLED)
+        entry_username.config(state=tk.DISABLED)
+        entry_password.config(state=tk.DISABLED)
+
+        # show or hide admin panel depending on rank
+        if hasattr(current_user, 'rank') and current_user.rank == RankEnum.admin:
+            admin_frame.pack(pady=10)
+            refresh_movie_list()
+        else:
+            if admin_frame:
+                admin_frame.pack_forget()
+            messagebox.showinfo("Note", "You are not an admin; admin panel unavailable.")
         if label_status:
             label_status.config(text=f"Logged in as {current_user.username}")
         if register_button:
@@ -76,6 +127,7 @@ def login():
     else:
         messagebox.showerror("Error", "Invalid login")
 
+def book_ticket_ui():
 def book_ticket_ui():
     if current_user is None:
         messagebox.showerror("Error", "Please login first")
@@ -392,10 +444,14 @@ def refresh_movie_list():
 def start_ui():
     global entry_username, entry_password, entry_movie, entry_seats
     global register_button, login_button, label_status, admin_frame
+    global register_button, login_button, label_status, admin_frame
 
     root = tk.Tk()
     root.title("Movie Ticket System")
     root.geometry("300x300")
+
+    label_status = tk.Label(root, text="Not logged in")
+    label_status.pack(pady=2)
 
     label_status = tk.Label(root, text="Not logged in")
     label_status.pack(pady=2)
@@ -412,6 +468,10 @@ def start_ui():
     register_button.pack(pady=5)
     login_button = tk.Button(root, text="Login", command=login)
     login_button.pack(pady=5)
+    register_button = tk.Button(root, text="Register", command=register)
+    register_button.pack(pady=5)
+    login_button = tk.Button(root, text="Login", command=login)
+    login_button.pack(pady=5)
 
     tk.Label(root, text="Movie Name").pack()
     entry_movie = tk.Entry(root)
@@ -421,6 +481,37 @@ def start_ui():
     entry_seats = tk.Entry(root)
     entry_seats.pack()
 
+    tk.Button(root, text="Select Seats & Book", command=show_seat_selection).pack(pady=10)
+    tk.Button(root, text="View Movies", command=show_movies).pack(pady=5)
+    tk.Button(root, text="My Bookings", command=show_user_bookings).pack(pady=5)
+
+#admin panel (hidden by default, only show for admins after login)
+    global admin_frame, entry_admin_title, entry_admin_seats, entry_admin_showtime, entry_admin_premiere_date, text_movie_list
+    admin_frame = tk.Frame(root)
+    tk.Label(admin_frame, text="Admin Panel", font=("Arial", 12, "bold")).pack(pady=5)
+    tk.Label(admin_frame, text="Title").pack()
+    entry_admin_title = tk.Entry(admin_frame)
+    entry_admin_title.pack()
+
+    tk.Label(admin_frame, text="Seats").pack()
+    entry_admin_seats = tk.Entry(admin_frame)
+    entry_admin_seats.pack()
+
+    tk.Label(admin_frame, text="Showtime").pack()
+    entry_admin_showtime = tk.Entry(admin_frame)
+    entry_admin_showtime.pack()
+
+    tk.Label(admin_frame, text="Premiere Date (YYYY-MM-DD)").pack()
+    entry_admin_premiere_date = tk.Entry(admin_frame)
+    entry_admin_premiere_date.pack()
+
+    tk.Button(admin_frame, text="Add Movie", command=admin_add).pack(pady=2)
+    tk.Button(admin_frame, text="Update Movie", command=admin_update).pack(pady=2)
+    tk.Button(admin_frame, text="Remove Movie", command=admin_remove).pack(pady=2)
+    tk.Button(admin_frame, text="List Movies", command=refresh_movie_list).pack(pady=2)
+    text_movie_list = tk.Text(admin_frame, height=8, width=30)
+    text_movie_list.pack(pady=5)
+    
     tk.Button(root, text="Select Seats & Book", command=show_seat_selection).pack(pady=10)
     tk.Button(root, text="View Movies", command=show_movies).pack(pady=5)
     tk.Button(root, text="My Bookings", command=show_user_bookings).pack(pady=5)
