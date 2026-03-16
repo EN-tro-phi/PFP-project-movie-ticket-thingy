@@ -12,13 +12,6 @@ add_movie = movie_handling.add_movie
 remove_movie = movie_handling.remove_movie
 update_movie = movie_handling.update_movie
 list_movies = movie_handling.list_movies
-import movie_handling
-
-find_movie = movie_handling.find_movie
-add_movie = movie_handling.add_movie
-remove_movie = movie_handling.remove_movie
-update_movie = movie_handling.update_movie
-list_movies = movie_handling.list_movies
 
 def register_user(username, password, users_list, user_class, rank_enum):
 
@@ -35,12 +28,12 @@ def login_user(username, password, users_list):
     return login(username, password, users_list)
 
 
-def book_ticket(user, movie_title, seats):
-    success, msg = movie_handling.book_ticket(movie_title, seats)
+def book_ticket(user, movie_title, seat_ids):
+    success, msg = movie_handling.book_ticket(movie_title, seat_ids)
     if success:
         movie = find_movie(movie_title)
         premiere_date = movie.get("premiere_date", "") if movie else ""
-        create_booking(user, movie_title, seats, premiere_date)
+        create_booking(user, movie_title, len(seat_ids), premiere_date)
     return success, msg
 
 

@@ -19,20 +19,10 @@
         "bookings": []
     },
     {
-        "username": "new",
+        "username": "new ",
         "password": "new",
         "rank": "new user",
-        "bookings": [
-            {
-                "movie": "new world",
-                "seats": [
-                    "0-2",
-                    "0-3"
-                ],
-                "premiere_date": "",
-                "booking_date": "2026-03-13 15:11:37"
-            }
-        ]
+        "bookings": []
     },
     {
         "username": "12234",
@@ -46,72 +36,10 @@
                 "booking_date": "2026-03-10 11:22:38"
             },
             {
-                "movie": "dune",
-                "seats": [
-                    "2-5",
-                    "2-4",
-                    "2-7",
-                    "2-6"
-                ],
+                "movie": "New world",
+                "seats": 4,
                 "premiere_date": "",
-                "booking_date": "2026-03-16 23:52:48"
-            },
-            {
-                "movie": "dune",
-                "seats": [
-                    "0-0",
-                    "0-1",
-                    "0-2",
-                    "0-3",
-                    "1-2",
-                    "1-3",
-                    "1-1",
-                    "1-0"
-                ],
-                "premiere_date": "",
-                "booking_date": "2026-03-16 23:53:00"
-            },
-            {
-                "movie": "dune",
-                "seats": [
-                    "3-0",
-                    "4-0",
-                    "4-1",
-                    "3-1",
-                    "3-2",
-                    "4-2",
-                    "3-3",
-                    "4-3",
-                    "3-4",
-                    "3-5",
-                    "4-5",
-                    "4-4",
-                    "4-6",
-                    "3-6",
-                    "3-7",
-                    "4-7"
-                ],
-                "premiere_date": "",
-                "booking_date": "2026-03-16 23:53:12"
-            },
-            {
-                "movie": "dune",
-                "seats": [
-                    "2-0",
-                    "2-1",
-                    "2-3",
-                    "2-2",
-                    "1-4",
-                    "1-5",
-                    "0-5",
-                    "0-4",
-                    "1-6",
-                    "0-6",
-                    "0-7",
-                    "1-7"
-                ],
-                "premiere_date": "",
-                "booking_date": "2026-03-16 23:53:23"
+                "booking_date": "2026-03-13 15:04:13"
             }
         ]
     },
